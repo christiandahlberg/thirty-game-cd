@@ -82,9 +82,7 @@
         <RadioGroup
             android:id="@+id/combinationRadioGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/diceGridBox"
-            android:layout_centerHorizontal="true">
+            android:layout_height="wrap_content">
 
             <GridLayout
                 android:layout_width="match_parent"
