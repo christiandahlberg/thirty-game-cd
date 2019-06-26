@@ -1,3 +1,33 @@
 <resources>
-    <string name="app_name">thirthy-game-cd</string>
+    <string name="app_name">thirty-game-cd</string>
+    <string name="start_game">Start Game</string>
+    <string name="string_error">STRINGERROR</string>
+    <string name="roll_dice">Roll Dice</string>
+
+    <string name="end_round">End Round</string>
+    <string name="player_score">Player score:</string>
+    <string name="rounds_left">Rounds to go:</string>
+    <string name="score">Score:</string>
+    <string name="throws_left">Throws left:</string>
+    <string name="total_score">Total score:</string>
+
+    <string name="dice_1">Dice 1</string>
+    <string name="dice_2">Dice 2</string>
+    <string name="dice_3">Dice 3</string>
+    <string name="dice_4">Dice 4</string>
+    <string name="dice_5">Dice 5</string>
+    <string name="dice_6">Dice 6</string>
+
+    <string name="low">Low</string>
+    <string name="four">Four</string>
+    <string name="five">Five</string>
+    <string name="six">Six</string>
+    <string name="seven">Seven</string>
+    <string name="eight">Eight</string>
+    <string name="nine">Nine</string>
+    <string name="ten">Ten</string>
+    <string name="eleven">Eleven</string>
+    <string name="twelve">Twelve</string>
+
+    <string name="thirty_game">Thirty Game</string>
 </resources>

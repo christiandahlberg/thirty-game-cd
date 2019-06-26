@@ -1,5 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="chdah.umu.thirthy_game_cd.controller.GameActivity"
+    android:id="@+id/mainGameScreenLayout"
+    >
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/diceGridBox">
+
+        <ImageButton
+            android:id="@+id/diceImageButton1"
+            android:contentDescription="@string/dice_1"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+        <ImageButton
+            android:id="@+id/diceImageButton2"
+            android:contentDescription="@string/dice_2"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog"
+            android:layout_row="0"
+            android:layout_column="1" />
+
+        <ImageButton
+            android:id="@+id/diceImageButton3"
+            android:contentDescription="@string/dice_3"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+        <ImageButton
+            android:id="@+id/diceImageButton4"
+            android:contentDescription="@string/dice_4"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+        <ImageButton
+            android:id="@+id/diceImageButton5"
+            android:contentDescription="@string/dice_5"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+        <ImageButton
+            android:id="@+id/diceImageButton6"
+            android:contentDescription="@string/dice_6"
+            android:layout_width="@dimen/dice_max_width"
+            android:layout_height="@dimen/dice_max_height"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/btn_dialog" />
+
+    </GridLayout>
+
+    <ScrollView
+        android:layout_width="91dp"
+        android:layout_height="449dp"
+        android:layout_above="@id/buttonAndTextLayout"
+        android:layout_below="@+id/diceGridBox"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1">
+
+        <RadioGroup
+            android:id="@+id/combinationRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/diceGridBox"
+            android:layout_centerHorizontal="true">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <RadioButton
+                    android:id="@+id/lowRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:text="@string/low" />
+
+                <RadioButton
+                    android:id="@+id/fourRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:text="@string/four" />
+
+                <RadioButton
+                    android:id="@+id/fiveRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="2"
+                    android:layout_column="0"
+                    android:text="@string/five" />
+
+                <RadioButton
+                    android:id="@+id/sixRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="3"
+                    android:layout_column="0"
+                    android:text="@string/six" />
+
+
+                <RadioButton
+                    android:id="@+id/sevenRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:text="@string/seven" />
+
+
+                <RadioButton
+                    android:id="@+id/eightRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="5"
+                    android:layout_column="0"
+                    android:text="@string/eight" />
+
+                <RadioButton
+                    android:id="@+id/nineRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="6"
+                    android:layout_column="0"
+                    android:text="@string/nine" />
+
+                <RadioButton
+                    android:id="@+id/tenRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="7"
+                    android:layout_column="0"
+                    android:text="@string/ten" />
+
+                <RadioButton
+                    android:id="@+id/elevenRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="8"
+                    android:layout_column="0"
+                    android:text="@string/eleven" />
+
+
+                <RadioButton
+                    android:id="@+id/twelveRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="9"
+                    android:layout_column="0"
+                    android:text="@string/twelve" />
+
+
+            </GridLayout>
+
+        </RadioGroup>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/buttonAndTextLayout"
+        android:layout_width="400dp"
+        android:layout_height="104dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/score" />
+
+        <Button
+            android:id="@+id/rollDiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/roll_dice" />
+
+        <Button
+            android:id="@+id/calculateScoreButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/end_round" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/roundNumberTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_error" />
+
+            <TextView
+                android:id="@+id/rerollCountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/string_error" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>
