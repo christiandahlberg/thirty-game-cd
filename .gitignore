@@ -1,7 +1,6 @@
 # Built application files
 *.apk
 *.ap_
-*.aab
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -44,9 +43,8 @@ captures/
 .idea/caches
 
 # Keystore files
-# Uncomment the following lines if you do not want to check your keystore files in.
+# Uncomment the following line if you do not want to check your keystore files in.
 #*.jks
-#*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -54,14 +52,33 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
-# Freeline
-freeline.py
-freeline/
-freeline_project_description.json
+com_crashlytics_export_strings.xml
 
-# fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
-fastlane/readme.md
+*.json
+*.rawproto
+
+# Signing files
+.signing/
+
+# User-specific configurations
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+*.iml
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
