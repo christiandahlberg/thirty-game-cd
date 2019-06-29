@@ -29,5 +29,18 @@
     <string name="eleven">Eleven</string>
     <string name="twelve">Twelve</string>
 
+    <string-array name="choices">
+        <item>@string/low</item>
+        <item>@string/four</item>
+        <item>@string/five</item>
+        <item>@string/six</item>
+        <item>@string/seven</item>
+        <item>@string/eight</item>
+        <item>@string/nine</item>
+        <item>@string/ten</item>
+        <item>@string/eleven</item>
+        <item>@string/twelve</item>
+    </string-array>
+
     <string name="thirty_game">Thirty Game</string>
 </resources>
