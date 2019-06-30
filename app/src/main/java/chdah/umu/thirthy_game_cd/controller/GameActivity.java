@@ -290,7 +290,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-    
+
     /**
      * End the game and return to previous screen.
      */

@@ -297,15 +297,15 @@ public class GameModel implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int i) {
-        dest.writeInt(isRollable ? 1 : 0);
-        dest.writeInt(roundCounter);
-        dest.writeInt(throwCounter);
-        dest.writeInt(choice);
         dest.writeIntArray(diceRolls);
         dest.writeIntArray(scores);
         dest.writeStringArray(choices);
         dest.writeBooleanArray(usedChoices);
         dest.writeBooleanArray(selectedDices);
+        dest.writeInt(isRollable ? 1 : 0);
+        dest.writeInt(roundCounter);
+        dest.writeInt(throwCounter);
+        dest.writeInt(choice);
     }
 
     /**
