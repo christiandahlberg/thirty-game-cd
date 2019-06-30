@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,9 +173,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: ////////////////////////////////////
-    // TODO: FIXA ALLT DETTA (så det ej liknar)
-
     /**
      * Class for radioButtons to change the current scoremode.
      */
@@ -233,7 +232,7 @@ public class GameActivity extends AppCompatActivity {
             for (Dice d : dices) {
                 if (!d.isAvailable()) {
                     d.getDiceButton().setBackgroundColor(COLOR_ENABLED);
-                    d.setIsAvailable(!d.isAvailable()); // Varför inte bara true?
+                    d.setIsAvailable(!d.isAvailable());
                 }
             }
 
@@ -291,7 +290,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-
+    
     /**
      * End the game and return to previous screen.
      */
@@ -300,7 +299,7 @@ public class GameActivity extends AppCompatActivity {
                 getString(R.string.score) + model.getScore(),
                 Toast.LENGTH_LONG).show();
         Intent intent = new Intent();
-        //intent.putExtra("model", model);
+        intent.putExtra("model", model);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

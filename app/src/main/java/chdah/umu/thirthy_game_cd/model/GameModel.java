@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class GameModel extends AppCompatActivity {
+public class GameModel implements Parcelable {
     // Static and final fields (public)
     public static final int DICE_QUANTITY = 6;
     public static final int POINTS_MIN = 2;
@@ -268,6 +268,9 @@ public class GameModel extends AppCompatActivity {
         return selectedDices[index];
     }
 
+    public String[] getScoreChoices() {
+        return choices;
+    }
     /**
      * Make sure program is parcable, i.e. save all the data.
      */
@@ -282,15 +285,18 @@ public class GameModel extends AppCompatActivity {
         }
     };
 
+    @Override
     public int describeContents() {
         return 0;
     }
+
 
     /**
      * Save data to parcel.
      * @param dest (parcel)
      */
-    public void writeToParcel(Parcel dest) {
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
         dest.writeInt(isRollable ? 1 : 0);
         dest.writeInt(roundCounter);
         dest.writeInt(throwCounter);
@@ -310,17 +316,6 @@ public class GameModel extends AppCompatActivity {
             selectedDices[i] = false;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * If the model is destroyed it can be reset in this constructor.
