@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +26,6 @@ public class GameActivity extends AppCompatActivity {
     private List<Dice> dices = new ArrayList<>();
     private List<RadioButton> choices = new ArrayList<>();
     private Drawable[] diceImages = new Drawable[6];
-    private String[] choicesList;
 
     // Static fields
     private static final int TOTAL_ROUNDS = 10;
@@ -81,7 +79,7 @@ public class GameActivity extends AppCompatActivity {
     private void populateTextViews() {
         // TODO: Fixa funktioner i GameModel
         throwCounter.setText("Throws left: " + model.getThrowsLeft());
-        roundCounter.setText("Rounds to go: " + (TOTAL_ROUNDS - model.getRoundsCount()));
+        roundCounter.setText("Rounds to go: " + (TOTAL_ROUNDS - model.getRoundCount()));
         score.setText("Current score: " + model.getScore());
     }
 
@@ -99,19 +97,19 @@ public class GameActivity extends AppCompatActivity {
 
     private void prepareChoices() {
         // PART ONE (adds each choice to choices ArrayList
-        choices.add((RadioButton) findViewById(R.id.lowRadioButton));
-        choices.add((RadioButton) findViewById(R.id.fourRadioButton));
-        choices.add((RadioButton) findViewById(R.id.fiveRadioButton));
-        choices.add((RadioButton) findViewById(R.id.sixRadioButton));
-        choices.add((RadioButton) findViewById(R.id.sevenRadioButton));
-        choices.add((RadioButton) findViewById(R.id.eightRadioButton));
-        choices.add((RadioButton) findViewById(R.id.nineRadioButton));
-        choices.add((RadioButton) findViewById(R.id.tenRadioButton));
-        choices.add((RadioButton) findViewById(R.id.elevenRadioButton));
-        choices.add((RadioButton) findViewById(R.id.twelveRadioButton));
+        choices.add(findViewById(R.id.lowRadioButton));
+        choices.add(findViewById(R.id.fourRadioButton));
+        choices.add(findViewById(R.id.fiveRadioButton));
+        choices.add(findViewById(R.id.sixRadioButton));
+        choices.add(findViewById(R.id.sevenRadioButton));
+        choices.add(findViewById(R.id.eightRadioButton));
+        choices.add(findViewById(R.id.nineRadioButton));
+        choices.add(findViewById(R.id.tenRadioButton));
+        choices.add(findViewById(R.id.elevenRadioButton));
+        choices.add(findViewById(R.id.twelveRadioButton));
 
         // PART TWO (sets the text of each element in list from string array)
-        choicesList = getResources().getStringArray(R.array.choices);
+        String[] choicesList = getResources().getStringArray(R.array.choices);
         for (int i = 0; i < choices.size(); i++) {
             choices.get(i).setText(choicesList[i]);
         }
@@ -131,12 +129,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void prepareDiceButtons() {
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton1)));
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton2)));
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton3)));
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton4)));
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton5)));
-        dices.add(new Dice((ImageButton) findViewById(R.id.diceImageButton6)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton1)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton2)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton3)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton4)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton5)));
+        dices.add(new Dice(findViewById(R.id.diceImageButton6)));
 
         checkDiceAvailability();
     }
@@ -146,8 +144,8 @@ public class GameActivity extends AppCompatActivity {
         for (Dice diceImage : dices) {
             diceImage.getDiceButton().setBackgroundColor(COLOR_ENABLED);
             diceImage.getDiceButton().setOnClickListener(new DiceImageListener(diceImage, index));
-            diceImage.getDiceButton().setImageDrawable(diceImages[model.getDiceRoll()[index] - 1]);
-            if(model.isDiceLocked(index)){
+            diceImage.getDiceButton().setImageDrawable(diceImages[model.getDiceRolls()[index] - 1]);
+            if(model.isDiceSelected(index)){
                 diceImage.setIsAvailable(false);
                 diceImage.getDiceButton().setBackgroundColor(COLOR_DISABLED);
             }
@@ -186,7 +184,7 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(View view) {
             RadioButton rb = (RadioButton) view;
             String scoreMode = rb.getText().toString();
-            model.setScoreMode(scoreMode);
+            model.setChoiceMode(scoreMode);
         }
     }
 
@@ -197,7 +195,7 @@ public class GameActivity extends AppCompatActivity {
         private Dice diceImage;
         private int indexInModel = 0;
 
-        public DiceImageListener(Dice linkedDiceImage, int indexInModel) {
+        private DiceImageListener(Dice linkedDiceImage, int indexInModel) {
             this.diceImage = linkedDiceImage;
             this.indexInModel = indexInModel;
         }
@@ -208,12 +206,12 @@ public class GameActivity extends AppCompatActivity {
             //If image is rollable, lock it.
             if(diceImage.isAvailable()){
                 diceImage.getDiceButton().setBackgroundColor(COLOR_DISABLED);
-                model.lockDice(indexInModel);
+                model.selectDice(indexInModel);
             }
             //otherwise unlock it.
             else{
                 diceImage.getDiceButton().setBackgroundColor(COLOR_ENABLED);
-                model.unlockDice(indexInModel);
+                model.unselectDice(indexInModel);
             }
             //change to opposite of current rollable.
             diceImage.setIsAvailable(!diceImage.isAvailable());
@@ -239,17 +237,17 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
-            model.endRound();
+            model.incrementRound();
             throwDices.callOnClick();
             throwDices.setEnabled(true);
 
             //change score, reroll and round left text.
-            throwCounter.setText(getString(R.string.throws_left) + model.getRollsLeft());
+            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
             roundCounter.setText(getString(R.string.rounds_left )+ (TOTAL_ROUNDS - model.getRoundCount()));
             score.setText(getString(R.string.score )+ model.getScore());
 
             //check if Game is done, if so: return to start screen with score.
-            if(model.isGameDone()) {
+            if(model.isGameFinished()) {
                 endGame();
             }
 
@@ -274,28 +272,24 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(View view) {
             int index = 0;
             int value;
-            model.rollDice();
-            boolean canClickAgain = model.isCanRollAgain();
+            model.throwDices();
+            boolean canClickAgain = model.isRollable();
 
             //Update images.
             for (Dice d : dices) {
                 if (d.isAvailable()) {
-                    value = model.getDiceRoll()[index] - 1;
+                    value = model.getDiceRolls()[index] - 1;
                     d.getDiceButton().setImageDrawable(diceImages[value]);
                 }
                 index++;
             }
 
             //Update reroll count
-            throwCounter.setText(getString(R.string.throws_left) + model.getRollsLeft());
+            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
             if(!canClickAgain){
                 view.setEnabled(false);
             }
         }
-    }
-
-    public void resetDices() {
-
     }
 
     /**
@@ -306,7 +300,7 @@ public class GameActivity extends AppCompatActivity {
                 getString(R.string.score) + model.getScore(),
                 Toast.LENGTH_LONG).show();
         Intent intent = new Intent();
-        intent.putExtra("model", model);
+        //intent.putExtra("model", model);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
