@@ -38,11 +38,11 @@ public class GameModel extends AppCompatActivity {
     private Random random;
 
     // Arrays
-    private int DiceRolls[] = new int[DICE_QUANTITY];
-    private boolean SelectedDices[] = new boolean[DICE_QUANTITY];
-    private int Scores[] = new int [ROUND_MAX];
-    private String Choices[] = new String[ROUND_MAX];
-    private boolean UsedChoices[] = new boolean[ROUND_MAX];
+    private int[] diceRolls = new int[DICE_QUANTITY];
+    private boolean[] selectedDices = new boolean[DICE_QUANTITY];
+    private int[] scores = new int [ROUND_MAX];
+    private String[] choices = new String[ROUND_MAX];
+    private boolean[] usedChoices = new boolean[ROUND_MAX];
 
     /**
      * Constructor which populates empty fields and sets the game in motion, rolling dices.
@@ -56,8 +56,8 @@ public class GameModel extends AppCompatActivity {
     }
 
     public void throwDices() {
-        for (int i = 0; i < DiceRolls.length; i++) {
-            DiceRolls[i] = random.nextInt(DICE_QUANTITY) + 1;
+        for (int i = 0; i < diceRolls.length; i++) {
+            diceRolls[i] = random.nextInt(DICE_QUANTITY) + 1;
         }
         throwCounter++;
 
@@ -85,7 +85,7 @@ public class GameModel extends AppCompatActivity {
         calculateRoundScore();
 
         //make sure user cant use same score choice again.
-        UsedChoices[choice - POINTS_LOW] = true;
+        usedChoices[choice - POINTS_LOW] = true;
 
         // Reset throw counter and increment round counter in preparation for next round.
         roundCounter++;
@@ -95,15 +95,15 @@ public class GameModel extends AppCompatActivity {
 
     public void calculateRoundScore() {
         if (choice == POINTS_LOW) {
-            for (int dice : DiceRolls) {
+            for (int dice : diceRolls) {
                 // Selects and adds every dice that has a value of three and below
                 if (dice <= POINTS_LOW) {
-                    Scores[roundCounter] += dice;
+                    scores[roundCounter] += dice;
                 }
             }
         } else {
             ArrayList<Integer> algTempDice = new ArrayList<>();
-            for (int dice : DiceRolls) {
+            for (int dice : diceRolls) {
                 if (dice <= choice) {
                     algTempDice.add(dice);
                 }
@@ -117,7 +117,7 @@ public class GameModel extends AppCompatActivity {
 
     private void findBestSelection(ArrayList<Integer> nbrs, int summary, int mode) {
         if (summary == mode) {
-            Scores[roundCounter] += summary;
+            scores[roundCounter] += summary;
             return;
         }
 
@@ -135,12 +135,12 @@ public class GameModel extends AppCompatActivity {
 
 
     private void setDiceRoll(int[] diceRoll) {
-        this.DiceRolls = diceRoll;
+        this.diceRolls = diceRoll;
     }
 
     private void setChoiceMode(int score) throws InvalidParameterException {
         //Make sure illegal score modes can not be set.
-        if(score < POINTS_MAX && score > POINTS_MIN && !UsedChoices[score - POINTS_LOW]){
+        if(score < POINTS_MAX && score > POINTS_MIN && !usedChoices[score - POINTS_LOW]){
             this.choice = score;
         } else{
             throw new InvalidParameterException("Score has to be available and between 3 and 13.");
@@ -152,7 +152,7 @@ public class GameModel extends AppCompatActivity {
      * @param index the index of the dice to lock.
      */
     public void selectDice(int index){
-        SelectedDices[index] = true;
+        selectedDices[index] = true;
     }
 
     /**
@@ -160,7 +160,7 @@ public class GameModel extends AppCompatActivity {
      * @param index the index of the dice to unlock.
      */
     public void unselectDice(int index){
-        SelectedDices[index] = false;
+        selectedDices[index] = false;
     }
 
     /**
@@ -169,14 +169,14 @@ public class GameModel extends AppCompatActivity {
      */
     public int getScore() {
         int tempScore = 0;
-        for (int i : Scores) {
+        for (int i : scores) {
             tempScore += i;
         }
         return tempScore;
     }
 
     public int[] getScores() {
-        return Scores;
+        return scores;
     }
 
     /**
@@ -184,8 +184,8 @@ public class GameModel extends AppCompatActivity {
      * @return the index of an available score mode, or -1 if none.
      */
     public int getAvailableScoreMode(){
-        for (int i = 0; i < UsedChoices.length; i++) {
-            if(UsedChoices[i] == false){
+        for (int i = 0; i < usedChoices.length; i++) {
+            if(!usedChoices[i]){
                 return i;
             }
         }
@@ -197,7 +197,7 @@ public class GameModel extends AppCompatActivity {
      * @param choice the string that sets the score mode.
      */
     public void setChoiceMode(String choice){
-        Choices[roundCounter] = choice;
+        choices[roundCounter] = choice;
         switch(choice){
             case "Low":
                 setChoiceMode(POINTS_LOW);
@@ -238,14 +238,14 @@ public class GameModel extends AppCompatActivity {
     /**
      * Check if the score choice is disabled or not
      * @param index the index of the score choice.
-     * @return
+     * @return returns if the score choice is available or not
      */
     public boolean isDisabledScoreChoice(int index){
-        return UsedChoices[index];
+        return usedChoices[index];
     }
 
     public int[] getDiceRolls() {
-        return DiceRolls;
+        return diceRolls;
     }
 
     public boolean isRollable() {
@@ -265,7 +265,7 @@ public class GameModel extends AppCompatActivity {
     }
 
     public boolean isDiceSelected(int index){
-        return SelectedDices[index];
+        return selectedDices[index];
     }
 
     /**
@@ -288,27 +288,26 @@ public class GameModel extends AppCompatActivity {
 
     /**
      * Save data to parcel.
-     * @param dest
-     * @param i
+     * @param dest (parcel)
      */
-    public void writeToParcel(Parcel dest, int i) {
+    public void writeToParcel(Parcel dest) {
         dest.writeInt(isRollable ? 1 : 0);
         dest.writeInt(roundCounter);
         dest.writeInt(throwCounter);
         dest.writeInt(choice);
-        dest.writeIntArray(DiceRolls);
-        dest.writeIntArray(Scores);
-        dest.writeStringArray(Choices);
-        dest.writeBooleanArray(UsedChoices);
-        dest.writeBooleanArray(SelectedDices);
+        dest.writeIntArray(diceRolls);
+        dest.writeIntArray(scores);
+        dest.writeStringArray(choices);
+        dest.writeBooleanArray(usedChoices);
+        dest.writeBooleanArray(selectedDices);
     }
 
     /**
      * Unlocks all the dice.
      */
     public void deselectAllDice() {
-        for (int i = 0; i < SelectedDices.length; i++) {
-            SelectedDices[i] = false;
+        for (int i = 0; i < selectedDices.length; i++) {
+            selectedDices[i] = false;
         }
     }
 
@@ -325,14 +324,14 @@ public class GameModel extends AppCompatActivity {
 
     /**
      * If the model is destroyed it can be reset in this constructor.
-     * @param in
+     * @param in (parcel)
      */
     public GameModel (Parcel in) {
-        in.readIntArray(DiceRolls);
-        in.readIntArray(Scores);
-        in.readStringArray(Choices);
-        in.readBooleanArray(UsedChoices);
-        in.readBooleanArray(SelectedDices);
+        in.readIntArray(diceRolls);
+        in.readIntArray(scores);
+        in.readStringArray(choices);
+        in.readBooleanArray(usedChoices);
+        in.readBooleanArray(selectedDices);
         isRollable = in.readInt() != 0;
         roundCounter = in.readInt();
         throwCounter = in.readInt();
