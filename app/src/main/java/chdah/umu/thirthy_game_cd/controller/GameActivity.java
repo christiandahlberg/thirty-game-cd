@@ -2,6 +2,8 @@ package chdah.umu.thirthy_game_cd.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +43,6 @@ public class GameActivity extends AppCompatActivity {
     private TextView score;
     private GameModel model;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +56,11 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
 
+        prepareThrowButton();
         prepareTextViews();
         prepareDices();
         prepareChoices();
         prepareDiceButtons();
-        prepareThrowButton();
     }
 
     /**
@@ -147,14 +148,34 @@ public class GameActivity extends AppCompatActivity {
             diceImage.getDiceButton().setOnClickListener(new DiceImageListener(diceImage, index));
             diceImage.getDiceButton().setImageDrawable(diceImages[model.getDiceRoll()[index] - 1]);
             if(model.isDiceLocked(index)){
-                diceImage.setRollable(false);
-                diceImage.getmDiceImage().setBackgroundColor(COLOR_DISABLED);
+                diceImage.setIsAvailable(false);
+                diceImage.getDiceButton().setBackgroundColor(COLOR_DISABLED);
             }
             index++;
         }
     }
 
+    private void prepareThrowButton() {
+        // Set onClickListener to button
+        Button calculateScore = findViewById(R.id.calculateScoreButton);
+        calculateScore.setOnClickListener(new RoundEnding());
+
+        // Prepare Throw Dices button
+        throwDices = findViewById(R.id.rollDiceButton);
+        throwDices.setOnClickListener(new ThrowDice());
+
+        // Set texts for buttons
+        calculateScore.setText(R.string.end_round);
+        throwDices.setText(R.string.roll_dice);
+
+        if (!model.isRollable()) {
+            throwDices.setEnabled(false);
+        }
+    }
+
+    // TODO: ////////////////////////////////////
     // TODO: FIXA ALLT DETTA (så det ej liknar)
+
     /**
      * Class for radioButtons to change the current scoremode.
      */
@@ -167,5 +188,126 @@ public class GameActivity extends AppCompatActivity {
             String scoreMode = rb.getText().toString();
             model.setScoreMode(scoreMode);
         }
+    }
+
+    /**
+     * If a image is clicked, toggle if it is rollable.
+     */
+    class DiceImageListener implements View.OnClickListener{
+        private Dice diceImage;
+        private int indexInModel = 0;
+
+        public DiceImageListener(Dice linkedDiceImage, int indexInModel) {
+            this.diceImage = linkedDiceImage;
+            this.indexInModel = indexInModel;
+        }
+
+        //Disable or enable dice buttons.
+        @Override
+        public void onClick(View view) {
+            //If image is rollable, lock it.
+            if(diceImage.isAvailable()){
+                diceImage.getDiceButton().setBackgroundColor(COLOR_DISABLED);
+                model.lockDice(indexInModel);
+            }
+            //otherwise unlock it.
+            else{
+                diceImage.getDiceButton().setBackgroundColor(COLOR_ENABLED);
+                model.unlockDice(indexInModel);
+            }
+            //change to opposite of current rollable.
+            diceImage.setIsAvailable(!diceImage.isAvailable());
+        }
+    }
+
+    /***
+     * End round and if it is the final round go to score screen.
+     */
+    class RoundEnding implements View.OnClickListener{
+
+        /**
+         * Ends the round
+         * @param view the button that ends the round.
+         */
+        @Override
+        public void onClick(View view) {
+            // Make all buttons available for rolling
+            for (Dice d : dices) {
+                if (!d.isAvailable()) {
+                    d.getDiceButton().setBackgroundColor(COLOR_ENABLED);
+                    d.setIsAvailable(!d.isAvailable()); // Varför inte bara true?
+                }
+            }
+
+            model.endRound();
+            throwDices.callOnClick();
+            throwDices.setEnabled(true);
+
+            //change score, reroll and round left text.
+            throwCounter.setText(getString(R.string.throws_left) + model.getRollsLeft());
+            roundCounter.setText(getString(R.string.rounds_left )+ (TOTAL_ROUNDS - model.getRoundCount()));
+            score.setText(getString(R.string.score )+ model.getScore());
+
+            //check if Game is done, if so: return to start screen with score.
+            if(model.isGameDone()) {
+                endGame();
+            }
+
+            //Unlock all dice.
+            model.deselectAllDice();
+
+            //disable current scorechoice button.
+            if(model.getAvailableScoreMode() != SCORES_DONE) {
+                choices.get(model.getAvailableScoreMode()).performClick();
+            }
+            for (int i = 0; i < choices.size(); i++) {
+                if(model.isDisabledScoreChoice(i)){
+                    choices.get(i).setEnabled(false);
+                }
+            }
+        }
+    }
+
+    class ThrowDice implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            int index = 0;
+            int value;
+            model.rollDice();
+            boolean canClickAgain = model.isCanRollAgain();
+
+            //Update images.
+            for (Dice d : dices) {
+                if (d.isAvailable()) {
+                    value = model.getDiceRoll()[index] - 1;
+                    d.getDiceButton().setImageDrawable(diceImages[value]);
+                }
+                index++;
+            }
+
+            //Update reroll count
+            throwCounter.setText(getString(R.string.throws_left) + model.getRollsLeft());
+            if(!canClickAgain){
+                view.setEnabled(false);
+            }
+        }
+    }
+
+    public void resetDices() {
+
+    }
+
+    /**
+     * End the game and return to previous screen.
+     */
+    private void endGame() {
+        Toast.makeText(GameActivity.this,
+                getString(R.string.score) + model.getScore(),
+                Toast.LENGTH_LONG).show();
+        Intent intent = new Intent();
+        intent.putExtra("model", model);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }

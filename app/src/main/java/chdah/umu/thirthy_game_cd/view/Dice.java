@@ -60,7 +60,7 @@ public class Dice {
      * Returns whether or not the Dice object is available for re-rolling or not.
      * @return
      */
-    public Boolean getIsAvailable () {
+    public Boolean isAvailable () {
         return isAvailable;
     }
 
