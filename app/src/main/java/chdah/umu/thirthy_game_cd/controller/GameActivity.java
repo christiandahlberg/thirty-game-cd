@@ -54,6 +54,7 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
 
+        // Prepare each element in the game for further usage
         prepareThrowButton();
         prepareTextViews();
         prepareDices();
@@ -65,11 +66,11 @@ public class GameActivity extends AppCompatActivity {
      * Sets each TextView to specific UI element depending on id.
      */
     private void prepareTextViews() {
-        // TODO: Ändra namn på id-variablerna
-        throwCounter = findViewById(R.id.rerollCountTextView);
-        roundCounter = findViewById(R.id.roundNumberTextView);
-        score = findViewById(R.id.scoreTextView);
+        throwCounter = findViewById(R.id.throw_counter_tv);
+        roundCounter = findViewById(R.id.round_counter_tv);
+        score = findViewById(R.id.score_tv);
 
+        // After initializing and assigning, we now populate the views.
         populateTextViews();
     }
 
@@ -94,8 +95,15 @@ public class GameActivity extends AppCompatActivity {
         diceImages[5] = getResources().getDrawable(R.drawable.white6);
     }
 
+    /**
+     * This method is split up in four different parts:
+     * PART ONE: Adding each view (RadioButton) depending on their id to our choices list.
+     * PART TWO: Sets the text of each choice from a straing array holding each choice.
+     * PART THREE: Links an onClickListener for each RadioButton (choice).
+     * PART FOUR: Checks if we are to enable or disable a choice, so users can't cheat.
+     */
     private void prepareChoices() {
-        // PART ONE (adds each choice to choices ArrayList
+        // PART ONE
         choices.add(findViewById(R.id.lowRadioButton));
         choices.add(findViewById(R.id.fourRadioButton));
         choices.add(findViewById(R.id.fiveRadioButton));
@@ -107,19 +115,19 @@ public class GameActivity extends AppCompatActivity {
         choices.add(findViewById(R.id.elevenRadioButton));
         choices.add(findViewById(R.id.twelveRadioButton));
 
-        // PART TWO (sets the text of each element in list from string array)
+        // PART TWO
         String[] choicesList = getResources().getStringArray(R.array.choices);
         for (int i = 0; i < choices.size(); i++) {
             choices.get(i).setText(choicesList[i]);
         }
 
-        // PART THREE (links the onClickListener for each choice)
+        // PART THREE
         for (RadioButton rb : choices) {
             rb.setOnClickListener(new radioButtonListener());
         }
 
         // TODO: Fix isDisabledSCoreChoice (i GameModel)
-        // PART FOUR (Enables/disables choices)
+        // PART FOUR
         for (int i = 0; i < choices.size(); i++) {
             if(model.isDisabledScoreChoice(i)){
                 choices.get(i).setEnabled(false);
@@ -127,6 +135,10 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adding the dices to our dice-list ('dices'), making usage of Dice-class constructor.
+     * Also checks dice availability with checkDiceAvailability() usage.
+     */
     private void prepareDiceButtons() {
         dices.add(new Dice(findViewById(R.id.diceImageButton1)));
         dices.add(new Dice(findViewById(R.id.diceImageButton2)));
@@ -138,6 +150,11 @@ public class GameActivity extends AppCompatActivity {
         checkDiceAvailability();
     }
 
+    /**
+     * Prepares every dice with it's background color. Using background color to see if dice
+     * is selected or not. If dice gets selected: background color changes to black and sets
+     * to non-available for rolling.
+     */
     private void checkDiceAvailability() {
         int index = 0;
         for (Dice diceImage : dices) {
@@ -154,7 +171,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void prepareThrowButton() {
         // Set onClickListener to button
-        Button calculateScore = findViewById(R.id.calculateScoreButton);
+        Button calculateScore = findViewById(R.id.calculate_score_b);
         calculateScore.setOnClickListener(new RoundEnding());
 
         // Prepare Throw Dices button
