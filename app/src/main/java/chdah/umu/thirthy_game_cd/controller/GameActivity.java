@@ -78,9 +78,9 @@ public class GameActivity extends AppCompatActivity {
      * Populates each TextView with specific data depending on current state of fields.
      */
     private void populateTextViews() {
-        throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
-        roundCounter.setText(R.string.rounds_left + (TOTAL_ROUNDS - model.getRoundCount()));
-        score.setText(R.string.score + model.getScore());
+        throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
+        roundCounter.setText(getString(R.string.rounds_left) + (TOTAL_ROUNDS - model.getRoundCount()));
+        score.setText(getString(R.string.score) + model.getScore());
     }
 
     /**
@@ -269,9 +269,9 @@ public class GameActivity extends AppCompatActivity {
             throwDices.setEnabled(true);
 
             // Set appropriate text depending on values
-            throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
-            roundCounter.setText(R.string.rounds_left + (TOTAL_ROUNDS - model.getRoundCount()));
-            score.setText(R.string.score + model.getScore());
+            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
+            roundCounter.setText(getString(R.string.rounds_left) + (TOTAL_ROUNDS - model.getRoundCount()));
+            score.setText(getString(R.string.score) + model.getScore());
 
             if(model.isGameFinished()) {
                 endGame();
@@ -316,7 +316,7 @@ public class GameActivity extends AppCompatActivity {
                 index++;
             }
 
-            throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
+            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
             if(!canClickAgain){
                 view.setEnabled(false);
             }

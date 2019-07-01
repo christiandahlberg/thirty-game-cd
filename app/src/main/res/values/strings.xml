@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Thirty by Christian Dahlberg</string>
     <string name="start_game">Start Game</string>
-    <string name="string_error">STRINGERROR</string>
+    <string name="string_error">ERROR</string>
     <string name="roll_dice">Roll Dice</string>
 
     <string name="end_round">End Round</string>

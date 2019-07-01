@@ -218,13 +218,13 @@
                 android:id="@+id/round_counter_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/rounds_left" />
+                android:text="@string/string_error" />
 
             <TextView
                 android:id="@+id/throw_counter_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/throws_left" />
+                android:text="@string/string_error" />
 
 
         </LinearLayout>

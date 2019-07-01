@@ -89,8 +89,8 @@ public class StartActivity extends AppCompatActivity {
             ArrayList<String> scoreArrayList = new ArrayList<>();
 
             for (int i = 0; i < scores.length; i++) {
-                scoreArrayList.add("Round #" + (i + 1) + " receieved the score of: " + scores[i] +
-                        " with choosing: " + scoreModes[i]);
+                scoreArrayList.add("Round #" + (i + 1) + ": " + scores[i] +
+                        " points (" + scoreModes[i] + ").");
             }
 
             ListView scoreList = findViewById(R.id.scoreChoicesListView);
@@ -101,13 +101,13 @@ public class StartActivity extends AppCompatActivity {
             );
 
             scoreList.setAdapter(scoreListAdapter);
-            scoreView.setText(R.string.total_score + score);
+            scoreView.setText(getString(R.string.total_score) + score);
 
         }
     }
 
     /**
-     * If score is rotated, remember the score for recreation.
+     * Handles the score if score is rotated, so that you can recreate it by saving the state.
      * @param outState bundle variable.
      */
     @Override
