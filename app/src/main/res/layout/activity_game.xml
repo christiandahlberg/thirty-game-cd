@@ -20,7 +20,7 @@
             android:layout_width="@dimen/dice_max_width"
             android:layout_height="@dimen/dice_max_height"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageButton
             android:id="@+id/diceImageButton2"
@@ -28,7 +28,7 @@
             android:layout_width="@dimen/dice_max_width"
             android:layout_height="@dimen/dice_max_height"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog"
+            app:srcCompat="@android:drawable/btn_star_big_on"
             android:layout_row="0"
             android:layout_column="1" />
 
@@ -38,7 +38,7 @@
             android:layout_width="@dimen/dice_max_width"
             android:layout_height="@dimen/dice_max_height"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageButton
             android:id="@+id/diceImageButton4"
@@ -48,7 +48,7 @@
             android:layout_column="0"
             android:layout_row="1"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageButton
             android:id="@+id/diceImageButton5"
@@ -56,7 +56,7 @@
             android:layout_width="@dimen/dice_max_width"
             android:layout_height="@dimen/dice_max_height"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageButton
             android:id="@+id/diceImageButton6"
@@ -64,19 +64,20 @@
             android:layout_width="@dimen/dice_max_width"
             android:layout_height="@dimen/dice_max_height"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
     </GridLayout>
 
     <ScrollView
-        android:layout_width="91dp"
-        android:layout_height="449dp"
+        android:layout_width="93dp"
+        android:layout_height="466dp"
         android:layout_above="@id/buttonAndTextLayout"
         android:layout_below="@+id/diceGridBox"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1">
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="8dp">
 
         <RadioGroup
             android:id="@+id/combinationRadioGroup"

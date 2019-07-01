@@ -159,14 +159,6 @@ public class GameModel implements Parcelable {
     }
 
     /**
-     * Set method for returning diceRolls array.
-     * @param diceRoll argument to assign to diceRolls array field.
-     */
-    private void setDiceRoll(int[] diceRoll) {
-        this.diceRolls = diceRoll;
-    }
-
-    /**
      * Method that selects the dice and locks it in place.
      * @param index The argument resembles what index in the array to lock.
      */
