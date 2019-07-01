@@ -1,9 +1,17 @@
 package chdah.umu.thirthy_game_cd.model;
 
+/*
+ *  GameModel.java
+ *
+ *  Thirty Game - an android implementation.
+ *  Course 5DV209 (Development of Mobile Applications)
+ *  Umea University, Summer of 2019
+ *
+ *  Christian Dahlberg
+ */
+
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -65,7 +73,8 @@ public class GameModel implements Parcelable {
     }
 
     /**
-     * Checks if user has played the final round.
+     * Checks if user has played the final round. That is, if the throw counter exceeds/is less
+     * than the maximum amount of allowed throws (THROWS_MAX field).
      */
     private void checkRollCounter() {
         if (throwCounter < THROWS_MAX) {
@@ -75,16 +84,19 @@ public class GameModel implements Parcelable {
         }
     }
 
+    /**
+     * A method which will increment the round counter and calculate what score user received
+     * depending on what values and choice user had. Then the choice gets unabled to be chosen
+     * again.
+     * @return Method is returning false if next round is the last. Otherwise true.
+     */
     public boolean incrementRound() {
         // Can't go to next round if current round is the last
         if (roundCounter == ROUND_MAX) {
             return false;
         }
 
-        //Calculate round score.
         calculateRoundScore();
-
-        //make sure user cant use same score choice again.
         usedChoices[choice - POINTS_LOW] = true;
 
         // Reset throw counter and increment round counter in preparation for next round.
@@ -93,10 +105,15 @@ public class GameModel implements Parcelable {
         return true;
     }
 
+    /**
+     * Calculates the points received from each round using an algorithm that automatically
+     * chooses the combination which gain highest score depending on what dices are present
+     * and what choice the user makes.
+     */
     private void calculateRoundScore() {
+        // When choosing Low: adds every dice with its value of 3 and below.
         if (choice == POINTS_LOW) {
             for (int dice : diceRolls) {
-                // Selects and adds every dice that has a value of three and below
                 if (dice <= POINTS_LOW) {
                     scores[roundCounter] += dice;
                 }
@@ -108,82 +125,78 @@ public class GameModel implements Parcelable {
                     algTempDice.add(dice);
                 }
             }
-            // Sort list before using selection algorithm.
+            // Sorts list using lambda expression before using selection algorithm.
             Collections.sort(algTempDice, (dice1, dice2) -> dice2 - dice1);
             findBestSelection(algTempDice,0, choice);
 
         }
     }
 
-    private void findBestSelection(ArrayList<Integer> nbrs, int summary, int mode) {
-        if (summary == mode) {
+    /**
+     * Recursive algorithm for automatic points allocation.
+     * @param nbrs A list of numbers where no number exceed the value of 'choice' argument.
+     * @param summary Starting integer of 0, will get appended for each recursion. Resembles
+     *                the summary of choice values added together.
+     * @param choice Resembles the choice (ie the target) for the summary to reach.
+     */
+    private void findBestSelection(ArrayList<Integer> nbrs, int summary, int choice) {
+        if (summary == choice) {
             scores[roundCounter] += summary;
             return;
         }
 
         for (int i = 0; i < nbrs.size(); i++) {
-
-            if(summary + nbrs.get(i) <= mode){
+            if(summary + nbrs.get(i) <= choice){
                 summary += nbrs.get(i);
                 nbrs.remove(i);
-                findBestSelection(nbrs, summary, mode);
+                findBestSelection(nbrs, summary, choice);
+
+                // If summary is equal the the choice value, then step back and assign summary to 0.
                 i = -1;
                 summary = 0;
             }
         }
     }
 
-
+    /**
+     * Set method for returning diceRolls array.
+     * @param diceRoll argument to assign to diceRolls array field.
+     */
     private void setDiceRoll(int[] diceRoll) {
         this.diceRolls = diceRoll;
     }
 
-    private void setChoiceMode(int score) throws InvalidParameterException {
-        //Make sure illegal score modes can not be set.
-        if(score < POINTS_MAX && score > POINTS_MIN && !usedChoices[score - POINTS_LOW]){
-            this.choice = score;
-        } else{
-            throw new InvalidParameterException("Score has to be available and between 3 and 13.");
-        }
-    }
-
     /**
-     * Lock the selected dice.
-     * @param index the index of the dice to lock.
+     * Method that selects the dice and locks it in place.
+     * @param index The argument resembles what index in the array to lock.
      */
     public void selectDice(int index){
         selectedDices[index] = true;
     }
 
     /**
-     * Unlock the selected dice for rolling
-     * @param index the index of the dice to unlock.
+     * Method that de-selects the dice and locks it in place.
+     * @param index The argument resembles what index in the array to unlock.
      */
     public void deselectDice(int index){
         selectedDices[index] = false;
     }
 
     /**
-     * Iterate all scores and add them to a score int.
-     * @return return the score
+     * Method that will deselct all the dices. Mainly used when ending a round to get a fresh start.
      */
-    public int getScore() {
-        int tempScore = 0;
-        for (int i : scores) {
-            tempScore += i;
+    public void deselectAllDice() {
+        for (int i = 0; i < selectedDices.length; i++) {
+            selectedDices[i] = false;
         }
-        return tempScore;
-    }
-
-    public int[] getScores() {
-        return scores;
     }
 
     /**
-     * Return the first available score mode.
-     * @return the index of an available score mode, or -1 if none.
+     * Get-method that returns the first available choice
+     * @return the index of the first available choice.
+     *         Returns -1 if there are no available choices left.
      */
-    public int getAvailableScoreMode(){
+    public int getAvailableChoice(){
         for (int i = 0; i < usedChoices.length; i++) {
             if(!usedChoices[i]){
                 return i;
@@ -193,8 +206,29 @@ public class GameModel implements Parcelable {
     }
 
     /**
-     * Sets the score choice based on the given string.
-     * @param choice the string that sets the score mode.
+     * Checking every element of scores-array to sequentially add each score
+     * @return return the summary of all scores in the array.
+     */
+    public int getFullScore() {
+        int tempScore = 0;
+        for (int i : scores) {
+            tempScore += i;
+        }
+        return tempScore;
+    }
+
+    /**
+     * Get-method for receiving the list of all scores.
+     * @return returns the scores-array.
+     */
+    public int[] getScoresList() {
+        return scores;
+    }
+
+
+    /**
+     * Method that sets the choice depending on user action.
+     * @param choice String that resembles the user choice, which the switch-case is based on.
      */
     public void setChoiceMode(String choice){
         choices[roundCounter] = choice;
@@ -236,43 +270,95 @@ public class GameModel implements Parcelable {
     }
 
     /**
-     * Check if the score choice is disabled or not
-     * @param index the index of the score choice.
-     * @return returns if the score choice is available or not
+     * Overloaded method that assures that no points can be set wrongly.
+     * @param score Argument for a score to be tested and set.
+     * @throws InvalidParameterException A message with information regarding what went wrong.
+     */
+    private void setChoiceMode(int score) throws InvalidParameterException {
+        //Make sure illegal score modes can not be set.
+        if(score < POINTS_MAX){
+            if (score > POINTS_MIN ) {
+                if (!usedChoices[score - POINTS_LOW]) {
+                    this.choice = score;
+                } else {
+                    throw new InvalidParameterException("Score has to be available and between 3 and 13.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Method for getting the dice values.
+     * @return Returning the full list containing the values.
+     */
+    public int[] getDiceRolls() {
+        return diceRolls;
+    }
+
+
+
+    /**
+     * Simple method that will check the amount of throws left for user action.
+     * @return Returns a number of how many throws are left (max 3 per round).
+     */
+    public int getThrowsLeft() {
+        return THROWS_MAX - throwCounter;
+    }
+
+    /**
+     * Simple method which checks what round is current.
+     * @return Returns a number of how many rounds user has played (max 10 rounds).
+     */
+    public int getRoundCount() {
+        return roundCounter;
+    }
+
+    /**
+     * Simple method which checks dice throwing availability.
+     * @return Returns either True or False depending on state.
+     */
+    public boolean isRollable() {
+        return isRollable;
+    }
+
+    /**
+     * Method that will check if the current choice from user is available or disabled.
+     * @param index Integer that resembles the index for which choice to check.
+     * @return Method will return either True or False depending on availability.
      */
     public boolean isDisabledScoreChoice(int index){
         return usedChoices[index];
     }
 
-    public int[] getDiceRolls() {
-        return diceRolls;
-    }
-
-    public boolean isRollable() {
-        return isRollable;
-    }
-
-    public int getThrowsLeft() {
-        return THROWS_MAX - throwCounter;
-    }
-
-    public int getRoundCount() {
-        return roundCounter;
-    }
-
+    /**
+     * Method that will check if the game is finished or not depending on round counter.
+     * @return Returns either True or False depending on the current round state.
+     */
     public boolean isGameFinished(){
         return roundCounter >= ROUND_MAX;
     }
 
+    /**
+     * Method that checks if a dice is selected by the user or not.
+     * @param index Integer that resembles what index in the list to check.
+     * @return Returns either True or False if the dice with said index (argument) is selected
+     *         or not.
+     */
     public boolean isDiceSelected(int index){
         return selectedDices[index];
     }
 
+    /**
+     * Method that asks for the list of choices available.
+     * @return A full string array containing all the choices.
+     */
     public String[] getScoreChoices() {
         return choices;
     }
+
     /**
-     * Make sure program is parcable, i.e. save all the data.
+     * A method that is used to bind everything together.
+     * Parcelable method that will save data and in itself make sure that the program is parcelable.
      */
     public static final Parcelable.Creator<GameModel> CREATOR
             = new Parcelable.Creator<GameModel>() {
@@ -285,15 +371,20 @@ public class GameModel implements Parcelable {
         }
     };
 
+    /**
+     * A must-have method for implementing the Parcelable interface. Can either return hashCode()
+     * or a custom value.
+     * @return In this case a custom value has beend chosen.
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-
     /**
-     * Save data to parcel.
-     * @param dest (parcel)
+     * Method where every class properties is added to the parcel, which are needed to transfer.
+     * @param dest parcel
+     * @param i flags
      */
     @Override
     public void writeToParcel(Parcel dest, int i) {
@@ -309,28 +400,21 @@ public class GameModel implements Parcelable {
     }
 
     /**
-     * Unlocks all the dice.
+     * A constructor which are to be called on receiving activity where you will be
+     * receiving values. Can also be used to restore and reset the model if it were to be
+     * destroyed. (In short a constructor used for parcel).
+     * @param parcel -
      */
-    public void deselectAllDice() {
-        for (int i = 0; i < selectedDices.length; i++) {
-            selectedDices[i] = false;
-        }
-    }
-
-    /**
-     * If the model is destroyed it can be reset in this constructor.
-     * @param in (parcel)
-     */
-    private GameModel (Parcel in) {
-        in.readIntArray(diceRolls);
-        in.readIntArray(scores);
-        in.readStringArray(choices);
-        in.readBooleanArray(usedChoices);
-        in.readBooleanArray(selectedDices);
-        isRollable = in.readInt() != 0;
-        roundCounter = in.readInt();
-        throwCounter = in.readInt();
-        choice = in.readInt();
+    private GameModel (Parcel parcel) {
+        parcel.readIntArray(diceRolls);
+        parcel.readIntArray(scores);
+        parcel.readStringArray(choices);
+        parcel.readBooleanArray(usedChoices);
+        parcel.readBooleanArray(selectedDices);
+        isRollable = parcel.readInt() != 0;
+        roundCounter = parcel.readInt();
+        throwCounter = parcel.readInt();
+        choice = parcel.readInt();
         random = new Random();
     }
 

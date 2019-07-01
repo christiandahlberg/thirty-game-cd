@@ -1,5 +1,15 @@
 package chdah.umu.thirthy_game_cd.controller;
 
+/*
+ *  GameActivity.java
+ *
+ *  Thirty Game - an android implementation.
+ *  Course 5DV209 (Development of Mobile Applications)
+ *  Umea University, Summer of 2019
+ *
+ *  Christian Dahlberg
+ */
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -20,6 +30,9 @@ import chdah.umu.thirthy_game_cd.R;
 import chdah.umu.thirthy_game_cd.model.GameModel;
 import chdah.umu.thirthy_game_cd.view.Dice;
 
+/**
+ * The actual activity which resembles runtime during gameplay. Making use of GameModel and Dice.
+ */
 public class GameActivity extends AppCompatActivity {
 
     // Lists and arrays
@@ -80,7 +93,7 @@ public class GameActivity extends AppCompatActivity {
     private void populateTextViews() {
         throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
         roundCounter.setText(getString(R.string.rounds_left) + (TOTAL_ROUNDS - model.getRoundCount()));
-        score.setText(getString(R.string.score) + model.getScore());
+        score.setText(getString(R.string.score) + model.getFullScore());
     }
 
     /**
@@ -271,7 +284,7 @@ public class GameActivity extends AppCompatActivity {
             // Set appropriate text depending on values
             throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
             roundCounter.setText(getString(R.string.rounds_left) + (TOTAL_ROUNDS - model.getRoundCount()));
-            score.setText(getString(R.string.score) + model.getScore());
+            score.setText(getString(R.string.score) + model.getFullScore());
 
             if(model.isGameFinished()) {
                 endGame();
@@ -281,8 +294,8 @@ public class GameActivity extends AppCompatActivity {
             model.deselectAllDice();
 
             // Pre-clicks the next available choice
-            if(model.getAvailableScoreMode() != SCORES_DONE) {
-                choices.get(model.getAvailableScoreMode()).performClick();
+            if(model.getAvailableChoice() != SCORES_DONE) {
+                choices.get(model.getAvailableChoice()).performClick();
             }
 
             // Checks all the choices and disables the choices that has already been used.
@@ -328,7 +341,7 @@ public class GameActivity extends AppCompatActivity {
      */
     private void endGame() {
         Toast.makeText(GameActivity.this,
-                getString(R.string.score) + model.getScore(),
+                getString(R.string.score) + model.getFullScore(),
                 Toast.LENGTH_LONG).show();
         Intent intent = new Intent();
         intent.putExtra("model", model);

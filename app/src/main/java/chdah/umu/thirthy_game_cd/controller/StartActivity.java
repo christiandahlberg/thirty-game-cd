@@ -1,5 +1,15 @@
 package chdah.umu.thirthy_game_cd.controller;
 
+/*
+ *  StartActivity.java
+ *
+ *  Thirty Game - an android implementation.
+ *  Course 5DV209 (Development of Mobile Applications)
+ *  Umea University, Summer of 2019
+ *
+ *  Christian Dahlberg
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,8 +81,8 @@ public class StartActivity extends AppCompatActivity {
         if(requestCode == GAME_ID){
             if(resultCode == Activity.RESULT_OK){
                 GameModel model = data.getParcelableExtra("model");
-                score = model.getScore();
-                scores = model.getScores();
+                score = model.getFullScore();
+                scores = model.getScoresList();
                 scoreModes = model.getScoreChoices();
                 restoreOnSavedInstance();
             }
@@ -80,16 +90,16 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /**
-     * Method to restore a saved instance. Starts with an arraylist to indicate what choice
+     * Method to restore a saved instance. Starts with an ArrayList to indicate what choice
      * received what points on what round. Finishes of with showing what score user has.
      */
     private void restoreOnSavedInstance() {
 
         if (scores != null && scoreModes != null) {
-            ArrayList<String> scoreArrayList = new ArrayList<>();
+            ArrayList<String> scoresList = new ArrayList<>();
 
             for (int i = 0; i < scores.length; i++) {
-                scoreArrayList.add("Round #" + (i + 1) + ": " + scores[i] +
+                scoresList.add("Round #" + (i + 1) + ": " + scores[i] +
                         " points (" + scoreModes[i] + ").");
             }
 
@@ -97,7 +107,7 @@ public class StartActivity extends AppCompatActivity {
             ArrayAdapter<String> scoreListAdapter = new ArrayAdapter<>(
                     this,
                     android.R.layout.simple_list_item_1,
-                    scoreArrayList
+                    scoresList
             );
 
             scoreList.setAdapter(scoreListAdapter);

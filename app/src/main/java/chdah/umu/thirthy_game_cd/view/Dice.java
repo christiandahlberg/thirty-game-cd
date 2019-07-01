@@ -1,6 +1,6 @@
 package chdah.umu.thirthy_game_cd.view;
 
-/**
+/*
  *  Dice.java
  *
  *  Thirty Game - an android implementation.
@@ -23,14 +23,12 @@ public class Dice {
 
     /**
      * Constructor for a Dice
-     * @param ib sets the Dice-values to be used in later stages.
+     * @param ib Sets the Dice-values to be used in later stages.
      */
     public Dice (ImageButton ib) {
         this.setIsAvailable(true);
         this.setDiceButton(ib);
     }
-
-    // SET / GET
 
     /**
      *  Links the argument ImageButton to this Dice's ImageButton field.
@@ -63,5 +61,4 @@ public class Dice {
     public Boolean isAvailable () {
         return isAvailable;
     }
-
 }
