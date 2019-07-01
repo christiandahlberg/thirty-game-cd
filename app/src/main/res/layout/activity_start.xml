@@ -7,7 +7,7 @@
     tools:context="chdah.umu.thirthy_game_cd.controller.StartActivity">
 
     <Button
-        android:id="@+id/startGameButton"
+        android:id="@+id/start_game_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -16,7 +16,7 @@
         />
 
     <TextView
-        android:id="@+id/finalScoreTextView"
+        android:id="@+id/ending_score_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -29,8 +29,8 @@
         android:id="@+id/scoreChoicesListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/finalScoreTextView"
-        android:layout_above="@id/startGameButton"
+        android:layout_below="@id/ending_score_tv"
+        android:layout_above="@id/start_game_b"
         />
 
 </RelativeLayout>

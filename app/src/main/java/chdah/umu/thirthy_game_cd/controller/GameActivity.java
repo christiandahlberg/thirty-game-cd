@@ -169,80 +169,93 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prepares the dice throwing button in three stages.
+     * PART ONE: Sets the onClickListener to our initiated button. See RoundEnding();.
+     * PART TWO: Assigns the button to our field and sets the onClickListener. See ThrowDice();.
+     * PART THREE: Sets texts to appropriate textfields.
+     */
     private void prepareThrowButton() {
-        // Set onClickListener to button
+        // PART ONE
         Button calculateScore = findViewById(R.id.calculate_score_b);
         calculateScore.setOnClickListener(new RoundEnding());
 
-        // Prepare Throw Dices button
-        throwDices = findViewById(R.id.rollDiceButton);
+        // PART TWO
+        throwDices = findViewById(R.id.roll_dice_b);
         throwDices.setOnClickListener(new ThrowDice());
 
-        // Set texts for buttons
+        // PART THREE
         calculateScore.setText(R.string.end_round);
         throwDices.setText(R.string.roll_dice);
 
+        // Checks if user should be able to throw more dices on current round.
         if (!model.isRollable()) {
             throwDices.setEnabled(false);
         }
     }
 
     /**
-     * Class for radioButtons to change the current scoremode.
+     * onClickListener for RadioButtons to see what choice the user chooses.
+     * Depending on what choice, then points will be assigned accordingly.
      */
     class radioButtonListener implements View.OnClickListener{
-
-        //Change the score mode
+        // TODO: Fix unchecking of radiobuttons
         @Override
         public void onClick(View view) {
             RadioButton rb = (RadioButton) view;
-            String scoreMode = rb.getText().toString();
-            model.setChoiceMode(scoreMode);
+            String choice = rb.getText().toString();
+            model.setChoiceMode(choice);
         }
     }
 
     /**
-     * If a image is clicked, toggle if it is rollable.
+     * onClickListener for the Dice-images.
+     * onClick() disables or enables the dice buttons depending on availability (selection).
+     * Last row sets the image to opposite of what it was before clicking (available > unavailable).
      */
     class DiceImageListener implements View.OnClickListener{
         private Dice diceImage;
-        private int indexInModel;
+        private int modelIndex;
 
-        private DiceImageListener(Dice linkedDiceImage, int indexInModel) {
-            this.diceImage = linkedDiceImage;
-            this.indexInModel = indexInModel;
+        /**
+         * Constructor for listener.
+         * @param dice is the image.
+         * @param index is what index the dice has in the model.
+         */
+        private DiceImageListener(Dice dice, int index) {
+            this.diceImage = dice;
+            this.modelIndex = index;
         }
 
-        //Disable or enable dice buttons.
         @Override
         public void onClick(View view) {
-            //If image is rollable, lock it.
             if(diceImage.isAvailable()){
                 diceImage.getDiceButton().setBackgroundColor(COLOR_DISABLED);
-                model.selectDice(indexInModel);
-            }
-            //otherwise unlock it.
-            else{
+                model.selectDice(modelIndex);
+            } else {
                 diceImage.getDiceButton().setBackgroundColor(COLOR_ENABLED);
-                model.unselectDice(indexInModel);
+                model.deselectDice(modelIndex);
             }
-            //change to opposite of current rollable.
             diceImage.setIsAvailable(!diceImage.isAvailable());
         }
     }
 
     /***
-     * End round and if it is the final round go to score screen.
+     * onClickListener for End Round-button (method), which will end the round and go to
+     * the score-screen if the next upcoming round is greater than the max round value.
+     * The heading depends on the return value of GameModel.isGameFinished() method.
      */
     class RoundEnding implements View.OnClickListener{
 
         /**
-         * Ends the round
-         * @param view the button that ends the round.
+         * Ends the current round. Starts of with making all dices available for rolling (and thus
+         * rolls the dices one time, making the 'throws left'-variable value to 2).
+         * It then changes the score, makes a re-roll of available dices and changes text to
+         * the appropriate amount of rounds there are left in the game.
+         * @param view resembles the 'end game' button.
          */
         @Override
         public void onClick(View view) {
-            // Make all buttons available for rolling
             for (Dice d : dices) {
                 if (!d.isAvailable()) {
                     d.getDiceButton().setBackgroundColor(COLOR_ENABLED);
@@ -250,27 +263,29 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
+            // Makes runtime changes
             model.incrementRound();
             throwDices.callOnClick();
             throwDices.setEnabled(true);
 
-            //change score, reroll and round left text.
+            // Set appropriate text depending on values
             throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
             roundCounter.setText(R.string.rounds_left + (TOTAL_ROUNDS - model.getRoundCount()));
             score.setText(R.string.score + model.getScore());
 
-            //check if Game is done, if so: return to start screen with score.
             if(model.isGameFinished()) {
                 endGame();
             }
 
-            //Unlock all dice.
+            // When you end the round, you are yet again allowed to roll all the buttons.
             model.deselectAllDice();
 
-            //disable current choice button.
+            // Pre-clicks the next available choice
             if(model.getAvailableScoreMode() != SCORES_DONE) {
                 choices.get(model.getAvailableScoreMode()).performClick();
             }
+
+            // Checks all the choices and disables the choices that has already been used.
             for (int i = 0; i < choices.size(); i++) {
                 if(model.isDisabledScoreChoice(i)){
                     choices.get(i).setEnabled(false);
@@ -279,8 +294,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * onClickListener for Throw Dice-button. Starts of with updating each image that
+     * d.isAvailable() returns true (if the button is available to be thrown, ie not selected).
+     * And lastly just update the throw counter text to appropriate value, as well as sets the
+     * button to false if the dices can't be thrown again.
+     */
     class ThrowDice implements View.OnClickListener{
-
         @Override
         public void onClick(View view) {
             int index = 0;
@@ -288,7 +308,6 @@ public class GameActivity extends AppCompatActivity {
             model.throwDices();
             boolean canClickAgain = model.isRollable();
 
-            //Update images.
             for (Dice d : dices) {
                 if (d.isAvailable()) {
                     value = model.getDiceRolls()[index] - 1;
@@ -297,7 +316,6 @@ public class GameActivity extends AppCompatActivity {
                 index++;
             }
 
-            //Update reroll count
             throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
             if(!canClickAgain){
                 view.setEnabled(false);

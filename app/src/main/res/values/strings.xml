@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">thirty-game-cd</string>
+    <string name="app_name">Thirty by Christian Dahlberg</string>
     <string name="start_game">Start Game</string>
     <string name="string_error">STRINGERROR</string>
     <string name="roll_dice">Roll Dice</string>
@@ -42,5 +42,5 @@
         <item>@string/twelve</item>
     </string-array>
 
-    <string name="thirty_game">Thirty Game</string>
+    <string name="thirty_game">Thirty</string>
 </resources>

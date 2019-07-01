@@ -19,79 +19,56 @@ import chdah.umu.thirthy_game_cd.model.GameModel;
 // TODO: Fix semantics, comments, clean the code.
 
 public class StartActivity extends AppCompatActivity {
-    private static final String SCORE_MODES_KEY = "scoreModes";
-    private final int REQUEST_CODE_GAME = 0;
-    private final String SCORE_KEY = "score";
+    // Static and final fields
+    private final int GAME_ID = 0;
     private final String SCORE_ARRAY_KEY = "scoreArray";
+    private final String SCORE_KEY = "score";
+    private static final String SCORE_CHOICE_KEY = "scoreModes";
 
+    // Lists and arrays
+    private int[] scores;
+    private String[] scoreModes;
+
+    // Normal fields
     private int score = 0;
-    private int scores[];
-    private String scoreModes[];
-    private TextView scoreTextView;
+    private TextView scoreView;
 
     /**
-     * Create the button that goes to the game activity.
-     * @param savedInstanceState
+     * On start, this creates the button which allows player to start the game, see the
+     * onClickListener for mStartGameButton (starts a new Intent).
+     * @param savedInstanceState, the current saved state.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        Button mStartGameButton = findViewById(R.id.startGameButton);
-        scoreTextView = findViewById(R.id.finalScoreTextView);
+        Button mStartGameButton = findViewById(R.id.start_game_b);
+        scoreView = findViewById(R.id.ending_score_tv);
         mStartGameButton.setText(R.string.start_game);
 
         if(savedInstanceState != null){
             score = savedInstanceState.getInt(SCORE_KEY);
             scores = savedInstanceState.getIntArray(SCORE_ARRAY_KEY);
-            scoreModes = savedInstanceState.getStringArray(SCORE_MODES_KEY);
+            scoreModes = savedInstanceState.getStringArray(SCORE_CHOICE_KEY);
             restoreOnSavedInstance();
         }
 
-        mStartGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mStartGameButton.setOnClickListener((View v) -> {
                 Intent gameIntent = new Intent(StartActivity.this, GameActivity.class);
-                startActivityForResult(gameIntent, REQUEST_CODE_GAME);
-            }
+                startActivityForResult(gameIntent, GAME_ID);
+
         });
     }
 
-    private void restoreOnSavedInstance() {
-
-        if (scores != null && scoreModes != null) {
-            ArrayList<String> scoreArrayList = new ArrayList<>();
-
-            //setup arraylist for what score mode got what score in the listview.
-            for (int i = 0; i < scores.length; i++) {
-                scoreArrayList.add("Round " + (i + 1) + " got score: " + scores[i] +
-                        " with scoring: " + scoreModes[i]);
-            }
-
-            ListView scoreList = findViewById(R.id.scoreChoicesListView);
-            ArrayAdapter<String> scoreListAdapter = new ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    scoreArrayList
-            );
-
-            scoreList.setAdapter(scoreListAdapter);
-
-            scoreTextView.setText(getString(R.string.total_score) + score);
-
-        }
-
-    }
-
     /**
-     * Get result from game and display the score.
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Gets the result model from putExtra parcelable and displays the score from the finished game.
+     * @param requestCode should resemble the GAME_ID if correct.
+     * @param resultCode should resemble Activity.RESULT_OK if everything is correct.
+     * @param data resembles the Intent from the GameActivity.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_CODE_GAME){
+        if(requestCode == GAME_ID){
             if(resultCode == Activity.RESULT_OK){
                 GameModel model = data.getParcelableExtra("model");
                 score = model.getScore();
@@ -103,14 +80,41 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /**
+     * Method to restore a saved instance. Starts with an arraylist to indicate what choice
+     * received what points on what round. Finishes of with showing what score user has.
+     */
+    private void restoreOnSavedInstance() {
+
+        if (scores != null && scoreModes != null) {
+            ArrayList<String> scoreArrayList = new ArrayList<>();
+
+            for (int i = 0; i < scores.length; i++) {
+                scoreArrayList.add("Round #" + (i + 1) + " receieved the score of: " + scores[i] +
+                        " with choosing: " + scoreModes[i]);
+            }
+
+            ListView scoreList = findViewById(R.id.scoreChoicesListView);
+            ArrayAdapter<String> scoreListAdapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    scoreArrayList
+            );
+
+            scoreList.setAdapter(scoreListAdapter);
+            scoreView.setText(R.string.total_score + score);
+
+        }
+    }
+
+    /**
      * If score is rotated, remember the score for recreation.
-     * @param outState
+     * @param outState bundle variable.
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SCORE_KEY, score);
         outState.putIntArray(SCORE_ARRAY_KEY, scores);
-        outState.putStringArray(SCORE_MODES_KEY, scoreModes);
+        outState.putStringArray(SCORE_CHOICE_KEY, scoreModes);
     }
 }

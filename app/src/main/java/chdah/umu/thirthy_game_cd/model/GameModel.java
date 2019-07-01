@@ -159,7 +159,7 @@ public class GameModel implements Parcelable {
      * Unlock the selected dice for rolling
      * @param index the index of the dice to unlock.
      */
-    public void unselectDice(int index){
+    public void deselectDice(int index){
         selectedDices[index] = false;
     }
 
