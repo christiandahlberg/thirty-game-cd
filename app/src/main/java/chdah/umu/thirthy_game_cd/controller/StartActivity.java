@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import chdah.umu.thirthy_game_cd.R;
 import chdah.umu.thirthy_game_cd.model.GameModel;
 
+// TODO: Fix semantics, comments, clean the code.
+
 public class StartActivity extends AppCompatActivity {
     private static final String SCORE_MODES_KEY = "scoreModes";
     private final int REQUEST_CODE_GAME = 0;

@@ -12,19 +12,19 @@ import java.util.Random;
 
 public class GameModel implements Parcelable {
     // Static and final fields (public)
-    public static final int DICE_QUANTITY = 6;
-    public static final int POINTS_MIN = 2;
-    public static final int POINTS_MAX = 13;
-    public static final int POINTS_LOW = 3;
-    public static final int POINTS_FOUR = 4;
-    public static final int POINTS_FIVE = 5;
-    public static final int POINTS_SIX = 6;
-    public static final int POINTS_SEVEN = 7;
-    public static final int POINTS_EIGHT = 8;
-    public static final int POINTS_NINE = 9;
-    public static final int POINTS_TEN = 10;
-    public static final int POINTS_ELEVEN = 11;
-    public static final int POINTS_TWELVE = 12;
+    private static final int DICE_QUANTITY = 6;
+    private static final int POINTS_MIN = 2;
+    private static final int POINTS_MAX = 13;
+    private static final int POINTS_LOW = 3;
+    private static final int POINTS_FOUR = 4;
+    private static final int POINTS_FIVE = 5;
+    private static final int POINTS_SIX = 6;
+    private static final int POINTS_SEVEN = 7;
+    private static final int POINTS_EIGHT = 8;
+    private static final int POINTS_NINE = 9;
+    private static final int POINTS_TEN = 10;
+    private static final int POINTS_ELEVEN = 11;
+    private static final int POINTS_TWELVE = 12;
 
     // Non-static final fields
     private final int THROWS_MAX = 3;
@@ -67,7 +67,7 @@ public class GameModel implements Parcelable {
     /**
      * Checks if user has played the final round.
      */
-    public void checkRollCounter() {
+    private void checkRollCounter() {
         if (throwCounter < THROWS_MAX) {
             isRollable = true;
         } else {
@@ -93,7 +93,7 @@ public class GameModel implements Parcelable {
         return true;
     }
 
-    public void calculateRoundScore() {
+    private void calculateRoundScore() {
         if (choice == POINTS_LOW) {
             for (int dice : diceRolls) {
                 // Selects and adds every dice that has a value of three and below
@@ -321,7 +321,7 @@ public class GameModel implements Parcelable {
      * If the model is destroyed it can be reset in this constructor.
      * @param in (parcel)
      */
-    public GameModel (Parcel in) {
+    private GameModel (Parcel in) {
         in.readIntArray(diceRolls);
         in.readIntArray(scores);
         in.readStringArray(choices);

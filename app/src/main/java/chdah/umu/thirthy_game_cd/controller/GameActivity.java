@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +77,9 @@ public class GameActivity extends AppCompatActivity {
      * Populates each TextView with specific data depending on current state of fields.
      */
     private void populateTextViews() {
-        // TODO: Fixa funktioner i GameModel
-        throwCounter.setText("Throws left: " + model.getThrowsLeft());
-        roundCounter.setText("Rounds to go: " + (TOTAL_ROUNDS - model.getRoundCount()));
-        score.setText("Current score: " + model.getScore());
+        throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
+        roundCounter.setText(R.string.rounds_left + (TOTAL_ROUNDS - model.getRoundCount()));
+        score.setText(R.string.score + model.getScore());
     }
 
     /**
@@ -121,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
             rb.setOnClickListener(new radioButtonListener());
         }
 
-        // TODO: Fixa isDisabledSCoreChoice (i GameModel)
+        // TODO: Fix isDisabledSCoreChoice (i GameModel)
         // PART FOUR (Enables/disables choices)
         for (int i = 0; i < choices.size(); i++) {
             if(model.isDisabledScoreChoice(i)){
@@ -192,7 +189,7 @@ public class GameActivity extends AppCompatActivity {
      */
     class DiceImageListener implements View.OnClickListener{
         private Dice diceImage;
-        private int indexInModel = 0;
+        private int indexInModel;
 
         private DiceImageListener(Dice linkedDiceImage, int indexInModel) {
             this.diceImage = linkedDiceImage;
@@ -241,9 +238,9 @@ public class GameActivity extends AppCompatActivity {
             throwDices.setEnabled(true);
 
             //change score, reroll and round left text.
-            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
-            roundCounter.setText(getString(R.string.rounds_left )+ (TOTAL_ROUNDS - model.getRoundCount()));
-            score.setText(getString(R.string.score )+ model.getScore());
+            throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
+            roundCounter.setText(R.string.rounds_left + (TOTAL_ROUNDS - model.getRoundCount()));
+            score.setText(R.string.score + model.getScore());
 
             //check if Game is done, if so: return to start screen with score.
             if(model.isGameFinished()) {
@@ -253,7 +250,7 @@ public class GameActivity extends AppCompatActivity {
             //Unlock all dice.
             model.deselectAllDice();
 
-            //disable current scorechoice button.
+            //disable current choice button.
             if(model.getAvailableScoreMode() != SCORES_DONE) {
                 choices.get(model.getAvailableScoreMode()).performClick();
             }
@@ -284,7 +281,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
             //Update reroll count
-            throwCounter.setText(getString(R.string.throws_left) + model.getThrowsLeft());
+            throwCounter.setText(R.string.throws_left + model.getThrowsLeft());
             if(!canClickAgain){
                 view.setEnabled(false);
             }
