@@ -337,6 +337,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
+     * If reset or if rotated, this will stop program from crashing.
+     * @param state resembles Bundle
+     */
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putParcelable(MODEL, model);
+    }
+
+    /**
      * End the game and return to previous screen.
      */
     private void endGame() {
